@@ -63,11 +63,9 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="idc">IDC管理</a></li>
-            {% for idcall in idc %}
-            <li><a href="idcall.id">主机管理</a></li>
-            {%endfor%}
+            <li class="active"><a href="/">Overview <span class="sr-only">(current)</span></a></li>
+            <li><a href="/idc">IDC管理</a></li>
+            <li><a href="/host">主机管理</a></li>
             <li><a href="#">Export</a></li>
           </ul>
           <ul class="nav nav-sidebar">
@@ -107,7 +105,7 @@
                 <tr>
                   <td>{{host.id}}</td>
                   <td>{{host.hostname}}</td>
-                  <td>{{host.ip}}</td>
+                  <td>{{host.ip_set}}</td>
                   <td>{{host.num}}</td>
                   <td>{{host.application}}</td>
                 </tr>

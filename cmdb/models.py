@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Idc(models.Model):
     """定义机房类"""
-    owner = models.ForeignKey(User)
+    # owner = models.ForeignKey(User)
     name = models.CharField(max_length=40, verbose_name='机房名称')
     remark = models.CharField(max_length=50, verbose_name='备注')
     date_added = models.DateTimeField(auto_now_add=True)
