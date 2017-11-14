@@ -4,10 +4,12 @@ from cmdb.models import Idc, Host, HostInfo, Ip
 
 class IpInline(admin.TabularInline):
     model = Ip
+    extra = 3
 
 
 class HostInline(admin.TabularInline):
     model = Host
+    xtra = 3
 
 
 class HostAdmin(admin.ModelAdmin):
@@ -19,14 +21,15 @@ class HostAdmin(admin.ModelAdmin):
 
 
 class IdcAdmin(admin.ModelAdmin):
-    inline = [HostInline]
+	list_display = ('id', 'name', 'remark',)
+   # inlines = [HostInline]
 
 
-class IpAdmin(admin.ModelAdmin):
-    list_display = ('ip')
+#class IpAdmin(admin.ModelAdmin):
+   # list_display = ('ip')
 
 
 admin.site.register(Idc, IdcAdmin)
 admin.site.register(Host, HostAdmin)
-admin.site.register(Ip, IdcAdmin)
+admin.site.register(Ip)
 admin.site.register(HostInfo)

@@ -43,7 +43,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Thor</a>
+          <a class="navbar-brand" href="#">lmanager</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -64,8 +64,10 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">IDC管理</a></li>
-            <li><a href="#">主机管理</a></li>
+            <li><a href="idc">IDC管理</a></li>
+            {% for idcall in idc %}
+            <li><a href="idcall.id">主机管理</a></li>
+            {%endfor%}
             <li><a href="#">Export</a></li>
           </ul>
           <ul class="nav nav-sidebar">
@@ -94,19 +96,23 @@
                 <tr>
                   <th>id</th>
                   <th>hostname</th>
+                  <th>ip</th>
                   <th>num</th>
                   <th>application</th>
                 </tr>
               </thead>
               <tbody>
                 {% for host in hosts %}
+
                 <tr>
                   <td>{{host.id}}</td>
                   <td>{{host.hostname}}</td>
+                  <td>{{host.ip}}</td>
                   <td>{{host.num}}</td>
                   <td>{{host.application}}</td>
                 </tr>
                 {% endfor %}
+
 
               </tbody>
             </table>
