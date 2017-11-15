@@ -30,11 +30,37 @@ def new_idc(request):
 
 
 def edit_idc(request, idc_id):
-    pass
+    idc = Idc.objects.get(id=idc_id)
+    name = Idc.name
+    remark = Idc.remark
+
+    if request.method != 'POST':
+        form = IdcForm(instance=idc)
+    else:
+        form = IdcForm(instance=entry, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(
+                reverse('learning_logs:topic', args=[topic.id]))
+    context = {'idc': idc, 'name': name, 'remark': remark, 'form': form}
+    return render(request, 'cmdb/edit_idc.html', context)
 
 
-def host(request, id):
-    idcid = Idc.objects.get(pk=id)
-    hostlist = idcid.host_set.all()
-    context = {'hostlist': hostlist}
-    return render(request, 'cmdb/host.html', context)
+def hostlist(request):
+    hlist = Host.objects.all()
+    #hostips = Host.objects.first().ip_set.all()
+    #hosts = Host.objects.get(id=host_id)
+   # hostips = hosts.ip_set.all()
+    context = {'hlist':hlist}
+    return render(request, 'cmdb/hlist.html', context)
+
+def hostinfo(request, host_id):
+    #hosts = Host.objects.all()
+    #hostips = Host.objects.first().ip_set.all()
+    hosts = Host.objects.get(id=host_id)
+    hostinfos = hosts.hostinfo_set.all()
+    hostips = hosts.ip_set.all()
+    context = {'hosts': hosts,'hostips': hostips,'hostinfos':hostinfos}
+    return render(request, 'cmdb/hostinfo.html', context)
+
+
