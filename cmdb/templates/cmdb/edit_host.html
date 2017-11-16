@@ -1,0 +1,6 @@
+<p>edit host</p>
+<form action="{% url 'cmdb:edit_host' host.id %}" method="post"> 
+	{% csrf_token %}
+	{{form.as_p}}
+<button name="submit"> save host</button>
+</form>

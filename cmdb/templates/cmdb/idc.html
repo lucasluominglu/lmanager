@@ -65,7 +65,7 @@
           <ul class="nav nav-sidebar">
             <li><a href="/">Overview <span class="sr-only">(current)</span></a></li>
             <li  class="active"><a href="/idc">IDC管理</a></li>
-            <li><a href="/hostlist">主机管理</a></li>
+            <li><a href="">主机管理</a></li>
             <li><a href="#">Export</a></li>
           </ul>
           <ul class="nav nav-sidebar">
@@ -93,16 +93,16 @@
                   <th>id</th>
                   <th>机房</th>
                   <th>备注</th>
-                  <th>编辑</th>
+                  <th>编辑idc</th>
                 </tr>
               </thead>
               <tbody>
                 {% for idcall in idc %}
                 <tr>
                   <td>{{idcall.id}}</td>
-                  <td>{{idcall.name}}</td>
+                  <td><a href="{% url 'cmdb:hostlist' idcall.id %}">{{idcall.name}}</a></td>
                   <td>{{idcall.remark}}</td>
-                  <td><a class="btn btn-default btn-xs" href="{% url 'cmdb:edit_idc' idcall.id %}">编辑</a></td>
+                  <td><a class="btn btn-default btn-xs" href="{% url 'cmdb:edit_idc' idcall.id %}">编辑idc</a></td>
                 </tr>
                 {% endfor %}
 
