@@ -16,25 +16,6 @@ def idc(request):
     context = {'idc': idc}
     return render(request, 'cmdb/idc.html', context)
 
-def hostlist(request,host_id):
-    hostlist = Host.objects.all()
-    #hostips = Host.objects.first().ip_set.all()
-    hosts = Host.objects.get(id=host_id)
-    hostips = hosts.ip_set.all()
-    context = {'hostlist':hostlist,'hosts': hosts,'hostips':hostips}
-    return render(request, 'cmdb/hostlist.html', context)
-
-def hostinfo(request, host_id):
-    #hosts = Host.objects.all()
-    #hostips = Host.objects.first().ip_set.all()
-    hosts = Host.objects.get(id=host_id)
-    hostinfos = hosts.hostinfo_set.all()
-    hostips = hosts.ip_set.all()
-    context = {'hosts': hosts,'hostips': hostips,'hostinfos':hostinfos}
-    return render(request, 'cmdb/hostinfo.html', context)
-
-
-
 def new_idc(request):
     if request.method != 'POST':
         form = IdcForm()
@@ -59,9 +40,46 @@ def edit_idc(request, idc_id):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(
-                reverse('cmdb:idc', args=[idc.id]))
+                reverse('cmdb:idc'))
     context = {'idc': idc, 'name': name, 'remark': remark, 'form': form}
     return render(request, 'cmdb/edit_idc.html', context)
+
+
+
+def hostlist(request, idc_id):
+    #hostips = Host.objects.first().ip_set.all()
+    hosts = Idc.objects.get(id=idc_id)
+    hostlists = hosts.host_set.all()
+    context = {'hostlists':hostlists,'hosts': hosts}
+    return render(request, 'cmdb/hostlist.html', context)
+
+
+
+
+def  add_host(request,idc_id):
+    idc = Idc.objects.get(id=idc_id)
+
+    if request.method != 'POST':
+        hostform = HostForm()
+        hostinfoform = HostInfoForm()
+        ipform = IpForm()
+    else:
+        hostform = HostForm(request.POST)
+        hostinfoform = HostInfoForm(request.POST)
+        ipform = IpForm(request.POST)
+        if hostform.is_valid() and hostinfoform.is_valid() and ipform.is_valid():
+           add_hostform = hostform.save(commit=False)
+           add_hostform.save()
+           add_hostinfoform = hostinfoform.save(commit=False)
+           add_hostinfoform.host = add_hostform
+           add_hostinfoform.save()
+           add_ipform = ipform.save(commit=False)
+           add_ipform.host = add_hostform
+           add_ipform.save()
+           return HttpResponseRedirect(reverse('cmdb:hostlist', args=[idc.id]))
+    context = {'idc': idc, 'hostform':hostform,'hostinfoform':hostinfoform,'ipform':ipform}
+    return render(request, 'cmdb/add_host.html', context)
+
 
 def edit_host(request, host_id):
     host = Host.objects.get(id=host_id)
@@ -93,9 +111,9 @@ def edit_hostinfo(request, host_id):
 
 
     if request.method != 'POST':
-        form = HostInfoFrom(instance=host)
+        form = hostinfoform(instance=host)
     else:
-        form = HostInfoFrom(instance=host, data=request.POST)
+        form = hostinfoform(instance=host, data=request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(

@@ -1,0 +1,8 @@
+<h2>{{ idc }}</h2>
+<form action="{% url 'cmdb:add_host' idc.id %}" method="post" >
+    {% csrf_token %}
+    {{ hostform.as_p }}
+    {{ hostinfoform.as_p }}
+    {{ ipform.as_p }}
+    <button name="submit">提交</button>
+</form>

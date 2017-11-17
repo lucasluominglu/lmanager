@@ -95,40 +95,54 @@
               <thead>
                 <tr>
                   <th>id</th>
-                  <th>hostname</th>
+                  <th>主机名</th>
+                  <th>编号</th>
+                  <th>应用</th>
                   <th>ip</th>
-                  <th>num</th>
-                  <th>application</th>
-                  <th>编辑主机</th>
-                  <th>hostinfo</th>
+                  <th>厂商</th>
+                  <th>产品型号</th>
+                  <th>产品序列号</th>
+                  <th>cpu核心数</th>
+                  <th>内存</th>
+                  <th>操作系统</th>
+                  <th>硬盘大小</th>
+                  <th>操作</th>
                 </tr>
               </thead>
               <tbody>
-                {% for host in hostlist %}
+                {% for hosts in hostlists%}
                 <tr>
                   
-                  <td><a class="btn btn-default btn-xs" href="{% url 'cmdb:hostinfo' host.id %}">{{host.id}}</a></td>
+                  <td>{{hosts.id}}</td>
+                  <td>{{hosts.hostname}}</td>
+                  <td>{{hosts.num}}</td>
+                  <td>{{hosts.application}}
                   <td>
-                  {{host.hostname}}
-                  </a>
-                 </td>   <select>
-                    {% for ips in hostips %}
+                  <select>
+                    {% for ips in hosts.ip_set.all %}
                       <option>
                         {{ips.ip}}
                       </option>
                       {%endfor%}
-                    </select><td>
-                  <td>{{host.num}}</td>
-                  <td>{{host.application}}</td>
-                  <td><a class="btn btn-default btn-xs" href="{% url 'cmdb:edit_host' host.id %}">编辑主机</a></td>
-                  </td>
-                  <td><a class="btn btn-default btn-xs" href="{% url 'cmdb:edit_hostinfo' host.id %}">hostinfo</a></td>
+                    </select>
+                    </td>
+                      {% for host in hosts.hostinfo_set.all%}
+                    <td>{{ host.date_added|date:'M d, Y H:i' }}</td>
+                    <td>{{host.manufacturer}}</td>
+                    <td>{{host.productmode}}</td>
+                    <td>{{host.serialnumber}}</td>
+                    <td>{{host.cpu}}</td>
+                    <td>{{host.mem}}</td>
+                    <td>{{host.os}}</td>
+                    <td>{{host.disk}}</td>
+                    <td><a class="btn btn-default btn-xs" href="{% url 'cmdb:add_host' hosts.id%}">添加主机</a></td>
+                    {%endfor%}
+                    {%endfor%}
                 </tr>
 
-                {%endfor%}
-              
               </tbody>
             </table>
+
           </div>
         </div>
       </div>
