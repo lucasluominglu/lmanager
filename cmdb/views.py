@@ -82,43 +82,29 @@ def  add_host(request,idc_id):
 
 
 def edit_host(request, host_id):
-    host = Host.objects.get(id=host_id)
-    hostname = host.hostname
-    num = host.num
-    application = host.application
-
+    hosts = Host.objects.get(id=host_id)
+    idc = Idc.objects.get(host=hosts)
+    hostinfo = HostInfo.objects.get(host=hosts)
+    ip = Ip.objects.get(host=hosts)
     if request.method != 'POST':
-        form = HostForm(instance=host)
+        hostsfrom = HostForm(instance=hosts)
+        idcfrom   = IdcForm(instance=idc)
+        hostinfofrom = HostInfoForm(instance=hostinfo)
+        ipfrom = IpForm(instance=ip)
     else:
-        form = HostForm(instance=host, data=request.POST)
-        if form.is_valid():
-            form.save()
+        hostsfrom = HostForm(instance=hosts, data=request.POST)
+        idcfrom = IdcForm(instance=idc, data=request.POST)
+        hostinfofrom = HostInfoForm(instance=hostinfo, data=request.POST)
+        ipfrom = IpForm(instance=ip, data=request.POST)
+        if hostsfrom.is_valid() and idcfrom.is_valid() and hostinfofrom.is_valid() and ipfrom.is_valid():
+            hostsfrom.save()
+            idcfrom.save()
+            hostinfofrom.save()
+            ipfrom.save()
             return HttpResponseRedirect(
-                reverse('cmdb:hostlist', args=[host.id]))
-    context = {'host': host, 'hostname': hostname,'num': num, 'application': application, 'form': form}
+                reverse('cmdb:hostlist', args=[hosts.id]))
+    context = {'hosts': hosts, 'hostsfrom': hostsfrom, 'idcfrom': idcfrom, 'hostinfofrom': hostinfofrom, 'ipfrom': ipfrom}
     return render(request, 'cmdb/edit_host.html', context)
 
 
-def edit_hostinfo(request, host_id):
-    host = HostInfo.objects.get(id=host_id)
-    hostname = host.host
-    manufacturer = host.manufacturer
-    productmode = host.productmode
-    serialnumber = host.serialnumber
-    cpu = host.cpu
-    mem = host.mem
-    disk = host.disk
 
-
-    if request.method != 'POST':
-        form = hostinfoform(instance=host)
-    else:
-        form = hostinfoform(instance=host, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(
-                reverse('cmdb:hostinfo', args=[host.id]))
-    context = {'hostname': hostname, 'manufacturer': manufacturer,'productmode': productmode,
-     'productmode': productmode,'serialnumber': serialnumber,'cpu': cpu,
-     'mem': mem,'disk': disk, 'form': form}
-    return render(request, 'cmdb/edit_hostinfo.html', context)

@@ -27,5 +27,5 @@ class HostInfoForm(forms.ModelForm):
 class IpForm(forms.ModelForm):
 	class Meta:
 		model = Ip
-		fields = ['ip']
-		labels = {'ip':'ip'}
+		fields = ['ip1','ip2']
+		labels = {'ip1':'ip1','ip2':'ip2'}

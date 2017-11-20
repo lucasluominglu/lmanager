@@ -121,8 +121,9 @@
                   <select>
                     {% for ips in hosts.ip_set.all %}
                       <option>
-                        {{ips.ip}}
+                        {{ips.ip1}}
                       </option>
+                      <option>{{ips.ip2}}</option>
                       {%endfor%}
                     </select>
                     </td>
@@ -135,14 +136,13 @@
                     <td>{{host.mem}}</td>
                     <td>{{host.os}}</td>
                     <td>{{host.disk}}</td>
-                    <td><a class="btn btn-default btn-xs" href="{% url 'cmdb:add_host' hosts.id%}">添加主机</a></td>
+                    <td><a class="btn btn-default btn-xs" href="{% url 'cmdb:edit_host' hosts.id%}">编辑主机</a></td>
                     {%endfor%}
                     {%endfor%}
                 </tr>
-
+                <td><a class="btn btn-default btn-xs" href="{% url 'cmdb:add_host' hosts.id%}">添加主机</a></td>
               </tbody>
             </table>
-
           </div>
         </div>
       </div>

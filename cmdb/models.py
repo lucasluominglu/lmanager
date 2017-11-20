@@ -19,10 +19,11 @@ class Idc(models.Model):
 
 class Ip(models.Model):
     host = models.ForeignKey("Host")
-    ip = models.GenericIPAddressField(verbose_name="ip")
+    ip1 = models.GenericIPAddressField(verbose_name="ip1")
+    ip2 = models.GenericIPAddressField(verbose_name="ip2" , null=True, blank=True)
 
     def __str__(self):
-        return self.ip
+        return self.ip1
 
 
 class Host(models.Model):
