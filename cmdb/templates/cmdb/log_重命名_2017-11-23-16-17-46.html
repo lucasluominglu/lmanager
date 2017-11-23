@@ -1,0 +1,11 @@
+<p>
+	<a href="{% url 'cmdb:index' %}"> index</a> -
+	<a href="{% url 'cmdb:idc' %}"> idc </a>
+	{% if user.is_authenticated %}
+	  hello, {{ user.username }}.
+	  <a href="{% url 'users:logout' %}">log out</a>
+	 {% else %}
+	 <a href="{% url 'users:register' %}">register</a>
+	 <a href="{% url 'users:login' %}">log in</a>
+	 {% endif %}
+</p>

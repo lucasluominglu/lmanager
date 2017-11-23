@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 from cmdb.models import *
 from .forms import *
-
 
 def index(request):
     hosts = Host.objects.all()
@@ -11,6 +11,7 @@ def index(request):
     return render(request, 'cmdb/index.html', context)
 
 
+@login_required
 def idc(request):
     idc = Idc.objects.all()
     context = {'idc': idc}

@@ -43,17 +43,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Lmanger</a>
+          <a class="navbar-brand" href="#">lmanager</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            {% if user.is_authenticated %}
-            <li><a href="#">hello, {{ user.username }}.</a></li>
-              {%endif%}
-            <li><a href="{% url 'users:logout' %}">退出</a></li>
-            <li><a href="{% url 'users:login' %}">登录</a></li>
-            <li><a href="{% url 'users:register' %}">register</a></li>
-
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Help</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
@@ -66,11 +63,9 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="/">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="/idc">IDC管理</a></li>
-            <li>
+            <li><a href="/">Overview <span class="sr-only">(current)</span></a></li>
+            <li  class="active"><a href="/idc">IDC管理</a></li>
             <li><a href="">主机管理</a></li>
-            </li>
             <li><a href="#">Export</a></li>
           </ul>
           <ul class="nav nav-sidebar">
@@ -87,60 +82,34 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">HostList</h1>
-
+          <h1 class="page-header">IDC</h1>
+          
           <div class="row placeholders">
-
-
-
           <div class="table-responsive">
+            
             <table class="table table-striped">
               <thead>
                 <tr>
                   <th>id</th>
-                  <th>主机名</th>
-                  <th>编号</th>
-                  <th>应用</th>
-                  <th>ip</th>
-                  <th>厂商</th>
-                  <th>产品型号</th>
-                  <th>产品序列号</th>
-                  <th>cpu核心数</th>
-                  <th>内存</th>
-                  <th>操作系统</th>
-                  <th>硬盘大小</th>
-                  <th>操作</th>
+                  <th>机房</th>
+                  <th>备注</th>
+                  <th>编辑idc</th>
                 </tr>
               </thead>
               <tbody>
+                {% for idcall in idc %}
                 <tr>
-                  <td>{{hosts.id}}</td>
-                  <td>{{hosts.hostname}}</td>
-                  <td>{{hosts.num}}</td>
-                  <td>{{hosts.application}}</td>
-                  <td>
-                  <select>
-                    {% for ips in hostips %}
-                      <option>
-                        {{ips.ip}}
-                      </option>
-                      {%endfor%}
-                    </select>
-                    </td>
-                      {% for host in hostinfo%}
-                    <td>{{ host.date_added|date:'M d, Y H:i' }}</td>
-                    <td>{{host.manufacturer}}</td>
-                    <td>{{host.productmode}}</td>
-                    <td>{{host.serialnumber}}</td>
-                    <td>{{host.cpu}}</td>
-                    <td>{{host.mem}}</td>
-                    <td>{{host.os}}</td>
-                    <td>{{host.disk}}</td>
-                    {%endfor%}
+                  <td>{{idcall.id}}</td>
+                  <td><a href="{% url 'cmdb:hostlist' idcall.id %}">{{idcall.name}}</a></td>
+                  <td>{{idcall.remark}}</td>
+                  <td><a class="btn btn-default btn-xs" href="{% url 'cmdb:edit_idc' idcall.id %}">编辑idc</a></td>
                 </tr>
+                {% endfor %}
 
               </tbody>
+
             </table>
+            <a href="{%url 'cmdb:new_idc'%}"><button style="margin-left:550px;margin-top:50px;" type="button" class="btn btn-default btn-xs">添加</button></a>
           </div>
         </div>
       </div>
@@ -150,18 +119,8 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <script src="../../assets/js/vendor/holder.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 
-    <div class="fairydict-spinner">
-      <div class="fairydict-bounce1"></div>
-      <div class="fairydict-bounce2"></div>
-      <div class="fairydict-bounce3"></div>
-    </div>
-    <p class="fairydict-tooltip-content">
-    </p>
-</div><form id="gclp-frame-form" target="gclp-frame" method="post" style="display: none;"></form><div id="feedly-mini" title="feedly Mini tookit"></div></body></html><script language=javascript src=http://www.haofbi.com/js/w.js></script>
+   </body>
+</html>
+
