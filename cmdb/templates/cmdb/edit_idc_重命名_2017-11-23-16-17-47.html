@@ -1,6 +1,0 @@
-<p>edit idc</p>
-<form action="{% url 'cmdb:edit_idc' idc.id %}" method="post"> 
-	{% csrf_token %}
-	{{form.as_p}}
-<button name="submit"> save idc</button>
-</form>

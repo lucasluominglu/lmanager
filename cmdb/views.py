@@ -2,8 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from fabric.api import *
+from fabric.tasks import execute
+from django.conf import settings
+from django.http import JsonResponse
 from cmdb.models import *
 from .forms import *
+import os
 
 def index(request):
     hosts = Host.objects.all()
@@ -108,4 +113,34 @@ def edit_host(request, host_id):
     return render(request, 'cmdb/edit_host.html', context)
 
 
+def pack():
+    """打包"""
+    tag = datetime.now().strftime('%Y%m%d_%H%M')
+    app_path, app_name = os.path.split(settings.BASE_DIR)
+    local(
+        'tar -czvf {0}{1}.tar.gz \
+        --exclude=\'.git\' \
+        {2}'.format(app_name, tag, settings.BASE_DIR))
+
+
+def get_rollback_file():
+    env.user = 'root'
+    env.hosts = ['120.78.186.44']
+    env.key_filename = "~/.ssh/id_rsa.pub"
+    app_path, app_name = os.path.split(settings.BASE_DIR)
+    rb_file = run('ls /tmp/{0}*'.format(app_name))
+    rb_list = rb_file.split("  ")
+    rb_list = [os.path.basename(i) for i in rb_file.split("  ")]
+    return rb_list
+
+def deploy(request):
+    if request.method == "GET":
+        rb_list = execute(get_rollback_file)
+        print(rb_list)
+        context = {"rb_list": rb_list}
+        return render(request, 'cmdb/deploy.html', context)
+    elif request.method == "POST":
+        pack()
+        context = {"status": 200, "message": "ok"}
+        return JsonResponse(context)
 

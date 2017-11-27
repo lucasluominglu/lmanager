@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^hostlist/(?P<idc_id>\d+)$', views.hostlist, name='hostlist'),
     url(r'^add_host/(?P<idc_id>\d+)$', views.add_host, name='add_host'),
     url(r'^edit_host/(?P<host_id>\d+)$', views.edit_host, name='edit_host'),
+    url(r'^deploy/', views.deploy, name='deploy'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

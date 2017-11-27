@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Dashboard Template for Bootstrap</title>
+    <title>Thor</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -43,17 +43,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Lmanger</a>
+          <a class="navbar-brand" href="#">Thor</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            {% if user.is_authenticated %}
-            <li><a href="#">hello, {{ user.username }}.</a></li>
-              {%endif%}
-            <li><a href="{% url 'users:logout' %}">退出</a></li>
-            <li><a href="{% url 'users:login' %}">登录</a></li>
-            <li><a href="{% url 'users:register' %}">register</a></li>
-
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Help</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
@@ -66,15 +63,13 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="/">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="/idc">IDC管理</a></li>
-            <li>
-            <li><a href="">主机管理</a></li>
-            </li>
-            <li><a href="#">Export</a></li>
+            <li><a href="/">Overview <span class="sr-only">(current)</span></a></li>
+            <li><a href="/idc/">IDC管理</a></li>
+            <li ><a href="/host/">主机管理</a></li>
+            <li class="active"><a href="/deploy/">自动部署</a></li>
           </ul>
           <ul class="nav nav-sidebar">
-            <li><a href="">Nav item</a></li>
+            <li><a href="">运维自动化</a></li>
             <li><a href="">Nav item again</a></li>
             <li><a href="">One more nav</a></li>
             <li><a href="">Another nav item</a></li>
@@ -87,7 +82,7 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">HostList</h1>
+          <h1 class="page-header">自动化部署</h1>
 
           <div class="row placeholders">
 
@@ -98,45 +93,25 @@
               <thead>
                 <tr>
                   <th>id</th>
-                  <th>主机名</th>
-                  <th>编号</th>
                   <th>应用</th>
-                  <th>ip</th>
-                  <th>厂商</th>
-                  <th>产品型号</th>
-                  <th>产品序列号</th>
-                  <th>cpu核心数</th>
-                  <th>内存</th>
-                  <th>操作系统</th>
-                  <th>硬盘大小</th>
-                  <th>操作</th>
+                  <th>部署</th>
+                  <th>回滚</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>{{hosts.id}}</td>
-                  <td>{{hosts.hostname}}</td>
-                  <td>{{hosts.num}}</td>
-                  <td>{{hosts.application}}</td>
+                  <td>1</td>
+                  <td>Thor</td>
+                  <td><button type="button" class="deploy btn btn-default btn-xs">部署</button></td>
                   <td>
-                  <select>
-                    {% for ips in hostips %}
-                      <option>
-                        {{ips.ip}}
-                      </option>
-                      {%endfor%}
+                    <select class="targz form-control">
+                      {% for k,v in rb_list.items %}
+                        {% for i in v%}
+                          <option>{{i}}</option>
+                        {% endfor %}
+                      {% endfor %}
                     </select>
-                    </td>
-                      {% for host in hostinfo%}
-                    <td>{{ host.date_added|date:'M d, Y H:i' }}</td>
-                    <td>{{host.manufacturer}}</td>
-                    <td>{{host.productmode}}</td>
-                    <td>{{host.serialnumber}}</td>
-                    <td>{{host.cpu}}</td>
-                    <td>{{host.mem}}</td>
-                    <td>{{host.os}}</td>
-                    <td>{{host.disk}}</td>
-                    {%endfor%}
+                    <button type="button" class="rollback btn btn-default btn-xs">回滚</button></td>
                 </tr>
 
               </tbody>
@@ -152,16 +127,38 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <script src="../../assets/js/vendor/holder.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 
-    <div class="fairydict-spinner">
-      <div class="fairydict-bounce1"></div>
-      <div class="fairydict-bounce2"></div>
-      <div class="fairydict-bounce3"></div>
-    </div>
-    <p class="fairydict-tooltip-content">
-    </p>
-</div><form id="gclp-frame-form" target="gclp-frame" method="post" style="display: none;"></form><div id="feedly-mini" title="feedly Mini tookit"></div></body></html>
+  </body>
+  <script type="text/javascript">
+  function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var cookie = jQuery.trim(cookies[i]);
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+  var csrftoken = getCookie('csrftoken');
+    $(".deploy").click(function(){
+      $.ajax({
+        url: '/deploy/',
+        type: "POST",
+        beforeSend: function(xhr, settings) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken)
+        },
+        success: function (data){
+          var data = data;
+          alert(data.messge);
+        }
+      });
+    });
+
+  </script>
+</html>
