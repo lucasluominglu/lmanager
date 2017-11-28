@@ -29,3 +29,8 @@ class IpForm(forms.ModelForm):
 		model = Ip
 		fields = ['ip1','ip2']
 		labels = {'ip1':'ip1','ip2':'ip2'}
+
+
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    file = forms.FileField()

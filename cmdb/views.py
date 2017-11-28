@@ -1,14 +1,15 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, Http404
-from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
+import os
+from datetime import datetime
 from fabric.api import *
 from fabric.tasks import execute
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, Http404
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.http import JsonResponse
-from cmdb.models import *
+from .models import *
 from .forms import *
-import os
 
 def index(request):
     hosts = Host.objects.all()
@@ -112,20 +113,54 @@ def edit_host(request, host_id):
     context = {'hosts': hosts, 'hostsfrom': hostsfrom, 'idcfrom': idcfrom, 'hostinfofrom': hostinfofrom, 'ipfrom': ipfrom}
     return render(request, 'cmdb/edit_host.html', context)
 
+def upload_file(request):
+    if request.method == 'POST':
+        #form = UploadFileForm(request.POST, request.FILES)
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            #handle_uploaded_file(request.FILES['file'])
+            form.save()
+            return HttpResponseRedirect(reverse('cmdb:index'))
+    else:
+        form = UploadFileForm()
+    return render(request, 'cmdb/upload_file.html', {'form': form})
 
 def pack():
     """打包"""
-    tag = datetime.now().strftime('%Y%m%d_%H%M')
+    tag = datetime.now().strftime('%Y%m%d')
     app_path, app_name = os.path.split(settings.BASE_DIR)
     local(
-        'tar -czvf {0}{1}.tar.gz \
-        --exclude=\'.git\' \
-        {2}'.format(app_name, tag, settings.BASE_DIR))
+        'tar -czvf {0}{1}.tar.gz {2}'.format(app_name, tag, settings.BASE_DIR))
+
+def upload():
+    env.user = 'root'
+    env.hosts = ['114.67.228.225']
+    env.key_filename = "~/.ssh/id_rsa.pub"
+    remote_tmp_dir = '/tmp'
+    app_path, app_name = os.path.split(settings.BASE_DIR)
+    tag = datetime.now().strftime('%Y%m%d')
+    deploy_file = '{0}{1}.tar.gz'.format(app_name, tag)
+    put(deploy_file, remote_tmp_dir)
+    run('ls /tmp')
+
+def dep():
+    env.user = 'root'
+    env.hosts = ['114.67.228.225']
+    env.key_filename = "~/.ssh/id_rsa.pub"
+    remote_tmp_dir = '/tmp'
+    app_path, app_name = os.path.split(settings.BASE_DIR)
+    tag = datetime.now().strftime('%Y%m%d')
+    deploy_file = '{0}{1}.tar.gz'.format(app_name, tag)
+    put(deploy_file, remote_tmp_dir)
+    run('ls /tmp')
+    run('tar -xf {0}/{1} -C /home'.format(remote_tmp_dir,deploy_file))
+    run('ls /home')
+
 
 
 def get_rollback_file():
     env.user = 'root'
-    env.hosts = ['120.78.186.44']
+    env.hosts = ['114.67.228.225']
     env.key_filename = "~/.ssh/id_rsa.pub"
     app_path, app_name = os.path.split(settings.BASE_DIR)
     rb_file = run('ls /tmp/{0}*'.format(app_name))
@@ -134,13 +169,44 @@ def get_rollback_file():
     return rb_list
 
 def deploy(request):
-    if request.method == "GET":
+   if request.method == "GET":
         rb_list = execute(get_rollback_file)
         print(rb_list)
-        context = {"rb_list": rb_list}
+        context = {'rb_list': rb_list}
         return render(request, 'cmdb/deploy.html', context)
-    elif request.method == "POST":
-        pack()
+    #lif request.method == "POST":
+    #    pack()
+     #   context = {"status": 200, "message": "ok"}
+      #  return JsonResponse(context)
+
+def packs(request):
+    if request.method == "POST":
+        myFile =request.FILES.get("myfile", None)
+        execute(pack)
         context = {"status": 200, "message": "ok"}
         return JsonResponse(context)
+
+def  uploads(request):
+    if request.method == "POST":
+        execute(upload)
+        context = {"status":200, "message": "ok"}
+        return JsonResponse(context)
+
+def  deploys(request):
+    if request.method == "POST":
+        execute(dep)
+        context = {"status":200, "message": "ok"}
+        return JsonResponse(context)
+
+
+
+def rollback(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        context = {"status": 200, "message": "ok", "name": name}
+        return JsonResponse(context)
+
+
+
+
 

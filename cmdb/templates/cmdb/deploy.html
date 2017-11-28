@@ -43,7 +43,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Thor</a>
+          <a class="navbar-brand" href="#">lmanager</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -94,6 +94,8 @@
                 <tr>
                   <th>id</th>
                   <th>应用</th>
+                  <th>打包</th>
+                  <th>上传</th>
                   <th>部署</th>
                   <th>回滚</th>
                 </tr>
@@ -101,8 +103,10 @@
               <tbody>
                 <tr>
                   <td>1</td>
-                  <td>Thor</td>
-                  <td><button type="button" class="deploy btn btn-default btn-xs">部署</button></td>
+                  <td>lmanger</td>
+                  <td><button type="button" class="packs btn btn-default btn-xs">打包</button></td>
+                  <td><button type="button" class="uploads btn btn-default btn-xs">上传</button></td>
+                  <td><button type="button" class="deploys btn btn-default btn-xs">部署</button></td>
                   <td>
                     <select class="targz form-control">
                       {% for k,v in rb_list.items %}
@@ -120,6 +124,7 @@
         </div>
       </div>
     </div>
+
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -146,9 +151,9 @@
       return cookieValue;
   }
   var csrftoken = getCookie('csrftoken');
-    $(".deploy").click(function(){
+    $(".packs").click(function(){
       $.ajax({
-        url: '/deploy/',
+        url: '/packs/',
         type: "POST",
         beforeSend: function(xhr, settings) {
           xhr.setRequestHeader("X-CSRFToken", csrftoken)
@@ -159,6 +164,52 @@
         }
       });
     });
+
+      $(".uploads").click(function(){
+      $.ajax({
+        url: '/uploads/',
+        type: "POST",
+        beforeSend: function(xhr, settings) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken)
+        },
+        success: function (data){
+          var data = data;
+          alert(data.messge);
+        }
+      });
+    });
+
+      $(".deploys").click(function(){
+      $.ajax({
+        url: '/deploys/',
+        type: "POST",
+        beforeSend: function(xhr, settings) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken)
+        },
+        success: function (data){
+          var data = data;
+          alert(data.messge);
+        }
+      });
+    });
+
+      $(".rollback").click(function(){
+        var targz_name = $(".targz").val();
+        $.ajax({
+          url: '/rollback/',
+          type: "POST",
+          beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken)
+          },
+          data:{
+            "name": targz_name
+          },
+          success: function (data){
+            var data = data;
+            alert(data.message);
+          }
+        });
+      });
 
   </script>
 </html>
