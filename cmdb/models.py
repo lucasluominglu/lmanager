@@ -60,3 +60,13 @@ class HostInfo(models.Model):
 
     def __str__(self):
         return self.host.hostname
+
+
+class Upload(models.Model):
+    file = models.FileField(upload_to = './upload')
+    def __str__(self):
+        return self.file
+
+    class Meta:
+        verbose_name = '文件上传'
+        verbose_name_plural = '文件上传'

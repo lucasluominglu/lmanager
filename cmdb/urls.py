@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^uploads/', views.uploads, name='uploads'),
     url(r'^deploys/', views.deploys, name='deploys'),
     url(r'^upload_file/', views.upload_file, name='upload_file'),
+    url(r'^rollback/', views.rollback, name='rollback'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

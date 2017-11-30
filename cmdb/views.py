@@ -116,21 +116,22 @@ def edit_host(request, host_id):
 def upload_file(request):
     if request.method == 'POST':
         #form = UploadFileForm(request.POST, request.FILES)
-        form = UploadFileForm(request.POST, request.FILES)
+        form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
             #handle_uploaded_file(request.FILES['file'])
             form.save()
-            return HttpResponseRedirect(reverse('cmdb:index'))
+            return HttpResponseRedirect(reverse('cmdb:upload_file'))
     else:
-        form = UploadFileForm()
+        form = UploadForm()
     return render(request, 'cmdb/upload_file.html', {'form': form})
+
 
 def pack():
     """打包"""
     tag = datetime.now().strftime('%Y%m%d')
     app_path, app_name = os.path.split(settings.BASE_DIR)
     local(
-        'tar -czvf {0}{1}.tar.gz {2}'.format(app_name, tag, settings.BASE_DIR))
+        'tar -czvf /root/{0}{1}.tar.gz {2}'.format(app_name, tag, settings.BASE_DIR))
 
 def upload():
     env.user = 'root'
@@ -139,7 +140,7 @@ def upload():
     remote_tmp_dir = '/tmp'
     app_path, app_name = os.path.split(settings.BASE_DIR)
     tag = datetime.now().strftime('%Y%m%d')
-    deploy_file = '{0}{1}.tar.gz'.format(app_name, tag)
+    deploy_file = '/root/{0}{1}.tar.gz'.format(app_name, tag)
     put(deploy_file, remote_tmp_dir)
     run('ls /tmp')
 
@@ -171,7 +172,6 @@ def get_rollback_file():
 def deploy(request):
    if request.method == "GET":
         rb_list = execute(get_rollback_file)
-        print(rb_list)
         context = {'rb_list': rb_list}
         return render(request, 'cmdb/deploy.html', context)
     #lif request.method == "POST":
@@ -181,7 +181,6 @@ def deploy(request):
 
 def packs(request):
     if request.method == "POST":
-        myFile =request.FILES.get("myfile", None)
         execute(pack)
         context = {"status": 200, "message": "ok"}
         return JsonResponse(context)

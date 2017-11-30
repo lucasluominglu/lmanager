@@ -114,28 +114,32 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{{hosts.id}}</td>
-                  <td>{{hosts.hostname}}</td>
-                  <td>{{hosts.num}}</td>
-                  <td>{{hosts.application}}</td>
+                  {% for host in hosts %}
+                  <td>{{host.id}}</td>
+                  <td>{{host.hostname}}</td>
+                  <td>{{host.num}}</td>
+                  <td>{{host.application}}</td>
+                  
                   <td>
                   <select>
-                    {% for ips in hostips %}
+                    {% for ips in host.ip_set.all %}
                       <option>
-                        {{ips.ip}}
+                        {{ips.ip1}}
                       </option>
+                      <option>{{ips.ip2}}</option>
                       {%endfor%}
                     </select>
                     </td>
-                      {% for host in hostinfo%}
-                    <td>{{ host.date_added|date:'M d, Y H:i' }}</td>
-                    <td>{{host.manufacturer}}</td>
-                    <td>{{host.productmode}}</td>
-                    <td>{{host.serialnumber}}</td>
-                    <td>{{host.cpu}}</td>
-                    <td>{{host.mem}}</td>
-                    <td>{{host.os}}</td>
-                    <td>{{host.disk}}</td>
+                      {% for hostinfo in host.hostinfo_set.all %}
+                    <td>{{ hostinfo.date_added|date:'M d, Y H:i' }}</td>
+                    <td>{{hostinfo.manufacturer}}</td>
+                    <td>{{hostinfo.productmode}}</td>
+                    <td>{{hostinfo.serialnumber}}</td>
+                    <td>{{hostinfo.cpu}}</td>
+                    <td>{{hostinfo.mem}}</td>
+                    <td>{{hostinfo.os}}</td>
+                    <td>{{hostinfo.disk}}</td>
+                    {%endfor%}
                     {%endfor%}
                 </tr>
 
@@ -150,12 +154,12 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script>window.jQuery || document.write('<script src=""><\/script>')</script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <script src="../../assets/js/vendor/holder.min.js"></script>
+    <script src=""></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src=""></script>
 
     <div class="fairydict-spinner">
       <div class="fairydict-bounce1"></div>
